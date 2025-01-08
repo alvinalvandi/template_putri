@@ -1,0 +1,234 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <?php $this->load->view('layout/head'); ?>
+
+  <!-- General CSS Files -->
+  <link rel="stylesheet" href="<?= base_url() ?>assets/modules/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="<?= base_url() ?>assets/modules/fontawesome/css/all.min.css">
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" href="<?= base_url() ?>assets/modules/datatables/datatables.min.css">
+  <link rel="stylesheet" href="<?= base_url() ?>assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+  <!-- Template CSS -->
+  <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
+  <link rel="stylesheet" href="<?= base_url() ?>assets/css/components.css">
+  <style>
+    .table td,
+    .table th {
+      padding: 0.25rem;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<?php
+$grup_pengguna = $this->session->userdata[$this->param['session']]['grup_pengguna'];
+?>
+
+<body>
+  <div id="app">
+    <div class="main-wrapper main-wrapper-1">
+
+      <?php $this->load->view('layout/topbar'); ?>
+
+      <?php $this->load->view('layout/sidebar'); ?>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>Data Pengguna</h1>
+            <div class="section-header-breadcrumb">
+              <?php
+              $menu_pengguna = array(90, 99);
+              if (in_array($grup_pengguna, $menu_pengguna)) {
+              ?>
+                <a href="<?= base_url() ?>pengguna/add" class="btn btn-icon icon-left btn-primary"><i class="fas fa-plus-circle"></i> Tambah</a>
+              <?php
+              }
+              ?>
+            </div>
+          </div>
+
+          <div class="section-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body table-responsive">
+                    <table class="table table-striped" id="table-1">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Nama</th>
+                          <th>User ID</th>
+                          <th>NIK</th>
+                          <th>Kode Kantor</th>
+                          <th>Last Login</th>
+                          <th>Status User</th>
+                          <th>Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <?php $this->load->view('layout/footer'); ?>
+    </div>
+  </div>
+
+  <!-- General JS Scripts -->
+  <script src="<?= base_url() ?>assets/modules/jquery.min.js"></script>
+  <script src="<?= base_url() ?>assets/modules/popper.js"></script>
+  <script src="<?= base_url() ?>assets/modules/tooltip.js"></script>
+  <script src="<?= base_url() ?>assets/modules/bootstrap/js/bootstrap.min.js"></script>
+  <script src="<?= base_url() ?>assets/modules/nicescroll/jquery.nicescroll.min.js"></script>
+  <script src="<?= base_url() ?>assets/js/stisla.js"></script>
+  <!-- JS Libraies -->
+  <script src="<?= base_url() ?>assets/modules/sweetalert/sweetalert.min.js"></script>
+  <script src="<?= base_url() ?>assets/modules/datatables/datatables.min.js"></script>
+  <script src="<?= base_url() ?>assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+  <script src="<?= base_url() ?>assets/modules/jquery-ui/jquery-ui.min.js"></script>
+  <!-- Page Specific JS File -->
+  <!-- Template JS File -->
+  <script src="<?= base_url() ?>assets/js/app.js"></script>
+  <script src="<?= base_url() ?>assets/js/custom.js"></script>
+
+  <?php $this->load->view('layout/alert_notification'); ?>
+
+  <script type="text/javascript">
+    var table;
+
+    table = $("#table-1").DataTable({
+      "processing": true,
+      "serverSide": true,
+      "order": [],
+      "ajax": {
+        "url": "<?php echo base_url() ?>pengguna/get-data",
+        "type": "POST"
+      },
+      "ordering": false,
+      "pagingType": "full_numbers",
+      "stateSave": true,
+      "language": {
+        "decimal": ",",
+        "thousands": ".",
+        "lengthMenu": "Tampilkan _MENU_",
+        "zeroRecords": "Data tidak tersedia.",
+        "info": "Tampilkan _START_ sampai _END_ dari _TOTAL_ data",
+        "infoEmpty": "Data tidak tersedia",
+        "infoFiltered": "(disaring dari _MAX_ data)",
+        "search": "Pencarian :",
+        "searchPlaceholder": '',
+        "paginate": {
+          "first": "<i class='fa fa-step-backward'></i>",
+          "previous": "<i class='fa fa-chevron-left'></i>",
+          "next": "<i class='fa fa-chevron-right'></i>",
+          "last": "<i class='fa fa-step-forward'></i>",
+        },
+        "aria": {
+          "paginate": {
+            "first": "First",
+            "previous": "Previous",
+            "next": "Next",
+            "last": "Last"
+          }
+        },
+        "processing": "<i class='fa fa-refresh fa-spin'></i>"
+      },
+      "columnDefs": [{
+          "targets": [0],
+          "className": 'text-center',
+          "width": 50
+        },
+        {
+          "targets": [-4],
+          "className": 'text-center',
+          "width": 400
+        },
+        {
+          "targets": [-3],
+          "className": 'text-center',
+          "width": 130
+        },
+        {
+          "targets": [-2],
+          "className": 'text-center',
+          "width": 50
+        },
+        {
+          "targets": [-1],
+          "className": 'text-center',
+          "width": 120
+        }
+      ]
+    });
+
+    $('body').tooltip({
+      selector: '[data-toggle="tooltip"]'
+    });
+
+    function reload_table() {
+      table.ajax.reload(null, false);
+    }
+
+    function nonaktif(id) {
+      swal({
+          title: 'Anda yakin nonaktifkan pengguna ini ?',
+          icon: 'warning',
+          buttons: {
+            confirm: {
+              text: 'Nonaktifkan !',
+              className: 'btn btn-primary'
+            },
+            cancel: {
+              text: 'Batalkan',
+              className: 'btn btn-default',
+              visible: true
+            }
+          },
+        })
+        .then((willDisabled) => {
+          if (willDisabled) {
+            $.ajax({
+              url: "<?= base_url() ?>pengguna/nonaktif",
+              type: "POST",
+              data: {
+                pengguna_id: id,
+              },
+              dataType: "JSON",
+              success: function(data) {
+                if (data.status) {
+                  infoalert(data.pesan, data.tipe_pesan);
+                  reload_table();
+                } else {
+                  infoalert(data.pesan, data.tipe_pesan);
+                }
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                // swal(jqXHR.responseText);
+                // console.error(jqXHR);
+                // console.error(textStatus);
+                // console.error(errorThrown);
+                swal('Terjadi kesalahan!');
+              }
+            });
+          } else {
+            swal('Pengguna tidak dinonaktifkan');
+          }
+        });
+    }
+  </script>
+</body>
+
+</html>
